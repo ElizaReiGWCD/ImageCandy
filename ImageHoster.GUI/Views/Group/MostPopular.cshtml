@@ -1,0 +1,30 @@
+﻿@model PagedList.IPagedList<Tuple<ImageHoster.CQRS.ReadModel.Dto.GroupDto, string>>
+@using PagedList.Mvc;
+
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+@{
+    ViewBag.Title = "Browse Most Popular Groups";
+}
+
+<h2>Browse Most Popular Groups</h2>
+
+<div class="grid">
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="tile double" onclick="window.location.href = '@Url.Action("Index", "Group", new { id = item.Item1.Id })'">
+                <div class="tile-content">
+                    <img src="@Url.Action("GetThumbnail", "Photo", new { filename = item.Item2 })"
+                </div>
+                <div class="brand bg-black">
+                    <span class="label fg-white">@item.Item1.Name</span>
+                </div>
+            </div>
+        }
+
+    </div>
+    <div class="row">
+        <div class="span12">@Html.PagedListPager(Model, page => Url.Action("Newest", new { page = page }), PagedListRenderOptions.MinimalWithPageCountText)</div>
+    </div>
+</div>

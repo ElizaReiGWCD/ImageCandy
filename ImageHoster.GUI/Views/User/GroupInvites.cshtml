@@ -1,0 +1,75 @@
+﻿@model PagedList.PagedList<ImageHoster.CQRS.ReadModel.Dto.GroupDto>
+@using PagedList.Mvc;
+
+@{
+    ViewBag.Title = "Group invites";
+}
+
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+<h2>Group invites</h2>
+
+<div class="grid" id="grid">
+    @foreach (var group in Model)
+    {
+        <div class="row" style="border-bottom: 1px solid black; border-top: 1px solid black;" id="row-@group.Id">
+            <h3>@group.Name</h3>
+
+            @if (string.IsNullOrEmpty(group.Description))
+            {
+                <p>This group has no information about itself</p>
+            }
+            else
+            {
+                <p>@group.Description</p>
+            }
+
+            <div id="buttons-@group.Id">
+                @using (Html.BeginForm("AcceptRequest", "Group", FormMethod.Post, new { id = "acceptform-" + group.Id, style="display:inline;" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.Hidden("groupid", group.Id)
+                }
+                    <button class="command-button success acceptButton" style="margin: 5px" id="@group.Id">
+                        <i class="icon-thumbs-up on-left"></i>
+                        Accept
+                <small>Join the group</small>
+                    </button>
+                
+
+                @using (Html.BeginForm("RejectRequest", "Group", FormMethod.Post, new { id = "rejectform-" + group.Id, style = "display:inline;" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.Hidden("groupid", group.Id)
+                }
+                    <button class="command-button place-right danger rejectButton" style="margin: 5px" id="@group.Id">
+                        <i class="icon-thumbs-down on-right"></i>
+                        Reject
+                    <small>Do not join the group</small>
+                    </button>
+                
+            </div>
+        </div>
+    }
+</div>
+
+<div style="" class="">
+    <span class="place-right">Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount</span>
+
+    <div class="place-left">@Html.PagedListPager(Model, page => Url.Action("GroupInvites", new { page = page }), PagedListRenderOptions.Classic)</div>
+</div>
+
+@section Scripts
+{
+    <script>
+        $('.acceptButton').on('click', function (evt) {
+            $.post('@Url.Action("AcceptInvite")', $('#acceptform-' + evt.target.id).serialize());
+            $('#buttons-' + evt.target.id).html('<p class="fg-green">You accepted the invite</p>');
+        });
+
+        $('.rejectButton').on('click', function (evt) {
+            $.post('@Url.Action("RejectInvite")', $('#rejectform-' + evt.target.id).serialize());
+            $('#buttons-' + evt.target.id).html('<p class="fg-red">You rejected the invite</p>');
+        });
+    </script>
+}

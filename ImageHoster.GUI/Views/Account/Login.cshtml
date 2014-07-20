@@ -1,0 +1,33 @@
+﻿@model ImageHoster.GUI.Models.User.LoginViewModel
+
+@{
+    ViewBag.Title = "Login";
+}
+
+<h2>Login</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <div class="editor-label">
+        @Html.LabelFor(model => model.Username)
+    </div>
+    <div class="editor-field input-control text size4">
+        @Html.EditorFor(model => model.Username)
+        <span class="fg-red">@Html.ValidationMessageFor(model => model.Username)</span>
+    </div>
+
+    <div class="editor-label">
+        @Html.LabelFor(model => model.Password)
+    </div>
+    <div class="editor-field input-control password size4">
+        @Html.PasswordFor(model => model.Password)
+        <span class="fg-red">@Html.ValidationMessageFor(model => model.Password)</span>
+    </div>
+
+    <p>
+        <input type="submit" value="Login" />
+    </p>
+}

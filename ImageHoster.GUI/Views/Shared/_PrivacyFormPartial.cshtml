@@ -1,0 +1,37 @@
+﻿@model ImageHoster.GUI.Models.PrivacyViewModel
+
+<div class="editor-label">
+    <label for="Privacy_Level">Level of privacy</label>
+</div>
+<div class="editor-field input-control select size5">
+    @Html.EnumDropDownListFor(model => model.Level, new { id = "selectedpriv", name = "Privacy.Level" })
+    <span class="fg-red">@Html.ValidationMessageFor(model => model.Level)</span>
+</div>
+<p class="tertiary-text-secondary" id="privacytext"></p>
+<div id="groupselect" style="display: none">
+    <div class="editor-label">
+        @Html.LabelFor(model => model.SelectedGroups)
+    </div>
+    <div class="editor-field input-control select size5">
+        @Html.DropDownListFor(model => model.SelectedGroups, Model.GroupNames, new { id="groups", multiple="multiple" })
+    </div>
+</div>
+
+<br />
+<div class="input-control checkbox">
+    <label>
+        <input type="checkbox" @(Model.OnlyLoggedInUsers ? "checked" : "") value="true" name="Privacy.OnlyLoggedInUsers" data-val-required="The Display this only for logged in users field is required." data-val="true" />
+        <input type="hidden" value="false" name="Privacy.OnlyLoggedInUsers">
+        <span class="check"></span>
+        Display this only for logged in users
+    </label>
+</div>
+<br />
+<div class="input-control checkbox">
+    <label>
+        <input type="checkbox" @(Model.Publish ? "checked" : "") value="true" name="Privacy.Publish" data-val-required="The members of this group can be seen by users from outside the group field is required." data-val="true" />
+        <input type="hidden" value="false" name="Privacy.Publish">
+        <span class="check"></span>
+        Display this on the front page
+    </label>
+</div>

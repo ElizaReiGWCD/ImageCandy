@@ -1,0 +1,298 @@
+﻿@model ImageHoster.GUI.Models.Group.GroupDetailViewModel
+
+@{
+    ViewBag.Title = "Index";
+}
+
+@section TopBar
+{
+    @if (ViewBag.IsAdmin)
+    {
+        @Html.ActionLink("Edit", "Edit", "Group", new { id = Model.Id }, new { @class = "element" })
+        using (Html.BeginForm("Delete", "Group", FormMethod.Post, new { id = "deleteForm", style = "display:inline" }))
+        {
+        @Html.AntiForgeryToken()
+        @Html.Hidden("id", Model.Id)
+        <a class="element" href="#">Delete</a>
+        }
+    }
+
+    @if (ViewBag.IsModerator)
+    {
+        <div class="element">
+            <a class="dropdown-toggle" href="#">Users</a>
+            <ul class="dropdown-menu" data-role="dropdown">
+                <li id="createFlatWindowBan"><a>Ban User</a></li>
+                <li>@Html.ActionLink("Make an announcement","MakeAnnouncement", "Group", new { id = Model.Id }, new { })</li>
+                <li>
+                    @if (Model.Privacy.Level == ImageHoster.CQRS.GroupPrivacyLevel.SemiPublic)
+                    {
+                        @Html.ActionLink("View join requests", "ViewJoinRequests", "Group", new { id = Model.Id }, new { })
+                    }
+                    else if (Model.Privacy.Level == ImageHoster.CQRS.GroupPrivacyLevel.Private)
+                    {
+                        @Html.ActionLink("Invite users", "InviteUsers", "Group", new { id = Model.Id }, new { })
+                    }
+                </li>
+            </ul>
+        </div>
+    }
+
+    @if (ViewBag.IsAdmin)
+    {
+        <div class="element">
+            <a class="dropdown-toggle" href="#">Moderators</a>
+            <ul class="dropdown-menu" data-role="dropdown">
+                <li id="createFlatWindowAdd"><a>Add Moderator</a></li>
+                <li id="createFlatWindowRemove"><a>Remove Moderator</a></li>
+            </ul>
+        </div>
+    }
+
+    @if (ViewBag.IsModerator)
+    {
+        <div class="element">
+            <a class="dropdown-toggle" href="#">Albums and photos</a>
+            <ul class="dropdown-menu" data-role="dropdown">
+                <li>@Html.ActionLink("Ban Albums", "BanAlbums", "Group", new { id = Model.Id }, new { })</li>
+                <li>@Html.ActionLink("Ban Photos", "BanPhotos", "Group", new { id = Model.Id }, new { })</li>
+                <li>@Html.ActionLink("View Pending Albums", "ViewPendingAlbums", "Group", new { id = Model.Id }, new { })</li>
+                <li>@Html.ActionLink("View Pending Photos", "ViewPendingPhotos", "Group", new { id = Model.Id }, new { })</li>
+            </ul>
+        </div>
+    }
+}
+
+<h1>@Model.Name</h1>
+
+<p>@Model.Description</p>
+
+<div class="grid">
+    @if (Model.LatestAnnouncement != null)
+    {
+        <div class="row">
+            <div style="display: block">
+                <h4 style="display: inline">Latest announcement</h4>
+                <a href="@Url.Action("Announcements", new { id = Model.Id })" class="place-right">View all</a>
+            </div>
+
+            <h5>@Model.LatestAnnouncement.Title</h5>
+            <p>
+                <small>Made by @Model.LatestAnnouncement.Announcer.Username on @Model.LatestAnnouncement.Time.ToShortDateString()</small><br />
+                @Model.LatestAnnouncement.Announcement
+            </p>
+        </div>
+    }
+
+    <div class="row">
+        <div style="display: block">
+            <h2 style="display: inline">Members</h2>
+            <a href="@Url.Action("Members", new { id = Model.Id })" class="place-right">View all</a>
+        </div>
+    </div>
+
+    @if (ViewBag.LoggedIn)
+    {
+        <div class="row">
+            @if (!ViewBag.InGroup)
+            {
+                if (Model.Privacy.Level == ImageHoster.CQRS.GroupPrivacyLevel.Public)
+                {
+                    using (Html.BeginForm("AddMember", "Group", FormMethod.Post, new { id = "addMemberForm", @class = "" }))
+                    {
+                @Html.AntiForgeryToken()
+                @Html.Hidden("id", Model.Id)
+                <a href="javascript:document.getElementById('addMemberForm').submit()" class="">Join group</a>
+                    }
+                }
+                else if (Model.Privacy.Level == ImageHoster.CQRS.GroupPrivacyLevel.SemiPublic)
+                {
+                    if (!ViewBag.RequestPending)
+                    {
+                        using (Html.BeginForm("SubmitJoinRequest", "Group", FormMethod.Post, new { id = "submitRequestForm", @class = "" }))
+                        {
+                @Html.AntiForgeryToken()
+                @Html.Hidden("id", Model.Id)
+                <a href="javascript:document.getElementById('submitRequestForm').submit()" class="" id="submitRequestLink">Send a request to join</a>
+                        }
+                    }
+                    else
+                    {
+                <p>Your request is pending approval</p>
+                    }
+                }
+            }
+            else
+            {
+                using (Html.BeginForm("RemoveMember", "Group", FormMethod.Post, new { id = "removeMemberForm", @class = "" }))
+                {
+                @Html.AntiForgeryToken()
+                @Html.Hidden("id", Model.Id)
+                <a href="javascript:document.getElementById('removeMemberForm').submit()" class="">Leave group</a>
+                }
+            }
+        </div>
+    }
+
+
+
+    <div class="row">
+        @{
+            var users = Model.Users.Take(8);
+
+            foreach (var user in users)
+            {
+            <div class="tile" onclick="window.location.href = '@Url.Action("Index", "User", new { username = user.Username })'">
+                <div class="tile-content text">
+                    @user.Username
+                </div>
+                <div class="brand bg-black">
+                    <span class="label fg-white">@user.Username</span>
+                </div>
+            </div>
+            }
+        }
+    </div>
+    <div class="row">
+        <div style="display: block">
+            <h2 style="display: inline">Albums</h2>
+            <a href="@Url.Action("Albums", new { id = Model.Id })" class="place-right">View all</a>
+        </div>
+    </div>
+    <div class="row">
+        @foreach (var album in Model.Albums)
+        {
+            <div class="image-container span3 shadow" style="display: inline-block; margin: 5px">
+                <a href="@Url.Action("Album", "Album", new { id = album.Id })">
+                    <img src="@Url.Action("GetThumbnail", "Photo", new { filename = album.FrontPhoto != null ? album.FrontPhoto.FileName : "" })" class="" /></a>
+                <div class="overlay">
+                    @album.Title
+                </div>
+            </div>
+        }
+    </div>
+    <div class="row">
+        <div style="display: block">
+            <h2 style="display: inline">Photos</h2>
+            <a href="@Url.Action("Photos", new { id = Model.Id })" class="place-right">View all</a>
+        </div>
+    </div>
+    <div class="row">
+        @foreach (var photo in Model.Photos)
+        {
+            <div class="image-container span3 shadow" style="display: inline-block; margin: 5px">
+                <a href="@Url.Action("Detail", "Photo", new { id = photo.Id })">
+                    <img src="@Url.Action("GetThumbnail", "Photo", new { filename = photo.FileName })" class="" /></a>
+                @if (!string.IsNullOrEmpty(photo.Title))
+                {
+                    <div class="overlay-fluid">
+                        @photo.Title
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+
+<div id="formForScriptAdd" style="display: none">
+    @using (Html.BeginForm("AddModerator", "Group", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Hidden("groupid", Model.Id);
+        <div class="editor-field input-control select size4" style="margin: 10px">
+            @Html.DropDownList("userid", Model.Users.Select(u => new SelectListItem() { Text = u.Username, Value = u.Id.ToString(), Selected = false }), new { @class = "" })
+        </div>
+        <br />
+        <button type="submit" class="primary" style="margin: 10px">Submit</button>
+    }
+</div>
+
+<div id="formForScriptRemove" style="display: none">
+    @using (Html.BeginForm("RemoveModerator", "Group", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Hidden("groupid", Model.Id);
+        <div class="editor-field input-control select size4" style="margin: 10px">
+            @Html.DropDownList("userid", Model.Moderators.Select(u => new SelectListItem() { Text = u.Username, Value = u.Id.ToString(), Selected = false }), new { @class = "" })
+        </div>
+        <br />
+        <button type="submit" class="primary" style="margin: 10px">Submit</button>
+    }
+</div>
+
+<div id="formForScriptBan" style="display: none">
+    @using (Html.BeginForm("BanUser", "Group", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Hidden("groupid", Model.Id);
+        <div class="editor-field input-control select size4" style="margin: 10px">
+            @Html.DropDownList("userid", Model.Users.Select(u => new SelectListItem() { Text = u.Username, Value = u.Id.ToString(), Selected = false }), new { @class = "" })
+        </div>
+        <br />
+        <button type="submit" class="primary" style="margin: 10px">Submit</button>
+    }
+</div>
+
+@section Scripts
+{
+    @if (ViewBag.IsAdmin)
+    {
+        <script>
+            $("#createFlatWindowAdd").on('click', function () {
+                $.Dialog({
+                    overlay: true,
+                    shadow: true,
+                    flat: true,
+                    title: 'Choose a member',
+                    content: '',
+                    onShow: function (_dialog) {
+                        var content = _dialog.children('.content');
+                        content.html($('#formForScriptAdd').html());
+                        $.Metro.initInputs();
+                    }
+                });
+            });
+        </script>
+        <script>
+            $("#createFlatWindowRemove").on('click', function () {
+                $.Dialog({
+                    overlay: true,
+                    shadow: true,
+                    flat: true,
+                    title: 'Choose a member',
+                    content: '',
+                    onShow: function (_dialog) {
+                        var content = _dialog.children('.content');
+                        content.html($('#formForScriptRemove').html());
+                        $.Metro.initInputs();
+                    }
+                });
+            });
+        </script>
+        <script>
+            $("#createFlatWindowBan").on('click', function () {
+                $.Dialog({
+                    overlay: true,
+                    shadow: true,
+                    flat: true,
+                    title: 'Choose a member',
+                    content: '',
+                    onShow: function (_dialog) {
+                        var content = _dialog.children('.content');
+                        content.html($('#formForScriptBan').html());
+                        $.Metro.initInputs();
+                    }
+                });
+            });
+        </script>
+        
+    }
+    <script>
+        $('#submitRequestLink').on('click', function (evt) {
+            evt.preventDefault();
+            $.post('@Url.Action("SubmitJoinRequest")', $('#submitRequestForm').serialize());
+            $('#submitRequestForm').html('<p>Your request is pending approval</p>');
+        });
+    </script>
+}

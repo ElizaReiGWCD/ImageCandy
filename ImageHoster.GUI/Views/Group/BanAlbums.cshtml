@@ -1,0 +1,69 @@
+﻿@model List<ImageHoster.CQRS.ReadModel.Dto.AlbumDto>
+
+@{
+    ViewBag.Title = "BanAlbums";
+}
+
+<h2>Ban Albums</h2>
+
+<div id="menu" class="grid">
+    <div class="row">
+        @foreach (var album in Model)
+        {
+            <div class="tile" id="@album.Id" onclick="$('#@album.Id').toggleClass('selected')">
+                <div class="tile-content image" id="@album.Id">
+                    <img src="@Url.Action("GetThumbnail", "Photo", new { filename = album.FrontPhoto == null ? "" : album.FrontPhoto.FileName })" id="@album.Id">
+                </div>
+            </div>
+        }
+    </div>
+    <div class="row">
+        <button class="primary" id="submit">Ban albums from group</button>
+    </div>
+</div>
+
+@Html.AntiForgeryToken()
+
+@section Scripts
+    {
+    <script id="ajax" src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+    <script>
+        var guids = [];
+
+        $('#menu').on('click', function (evt) {
+
+            for (var i = 0; i < guids.length; i++) {
+                if (guids[i] == evt.target.id) {
+                    guids[i] = "";
+                    guids = guids.filter(function (value) {
+                        return value != "";
+                    });
+                    return;
+                }
+            }
+
+            guids.push(evt.target.id);
+
+        });
+
+        $('#submit').on('click', function (evt) {
+            var token = $('input[name="__RequestVerificationToken"]').val();
+
+            var headers = {};
+
+            headers['__RequestVerificationToken'] = token;
+
+            $.ajaxSettings.traditional = true;
+
+            $.ajax({
+                url: '@Url.Action("BanAlbums")',
+                type: 'POST',
+                headers: headers,
+                data: { 'ids': guids, 'GroupId': '@ViewBag.GroupId', '__RequestVerificationToken': token },
+                    success: function () {
+                        window.location = '@Url.Action("Index", new { id = ViewBag.GroupId })'
+                    }
+            });
+        });
+    </script>
+}

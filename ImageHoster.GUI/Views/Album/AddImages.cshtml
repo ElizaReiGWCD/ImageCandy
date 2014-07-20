@@ -1,0 +1,71 @@
+﻿@model PagedList.PagedList<ImageHoster.CQRS.ReadModel.Dto.PhotoDto>
+
+@{
+    ViewBag.Title = ViewBag.Mode;
+    string button = ((string)ViewBag.Mode).Replace("Images", "");
+}
+
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+<h2>@button Images</h2>
+
+<div id="menu" class="grid">
+    <div id="photogrid" class="row">
+        @{
+            Html.RenderPartial("GetPhotos", Model);
+        }
+    </div>
+    <div class="row">
+        <span class="place-right">Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount</span>
+        <div class="place-left" style="display: inline">@Html.PagedListPager(Model, page => Url.Action("GetPhotos", new { page = page, album = ViewBag.AlbumId, mode = ViewBag.Mode }), PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing("photogrid"))</div>
+    </div>
+    <div class="row">
+        <button class="primary" id="submit">@button images to album</button>
+    </div>
+</div>
+@Html.AntiForgeryToken()
+
+    @section Scripts
+    {
+        <script id="ajax" src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+        <script>
+            var guids = [];
+
+            $('#menu').on('click', function (evt) {
+
+                for (var i = 0; i < guids.length; i++) {
+                    if (guids[i] == evt.target.id) {
+                        guids[i] = "";
+                        guids = guids.filter(function (value) {
+                            return value != "";
+                        });
+                        return;
+                    }
+                }
+
+                guids.push(evt.target.id);
+
+            });
+
+            $('#submit').on('click', function (evt) {
+                var token = $('input[name="__RequestVerificationToken"]').val();
+
+                var headers = {};
+
+                headers['__RequestVerificationToken'] = token;
+
+                $.ajaxSettings.traditional = true;
+
+                $.ajax({
+                    url: '@Url.Action(ViewBag.Mode)',
+                    type: 'POST',
+                    headers: headers,
+                    data: { 'ids': guids, 'albumId': '@ViewBag.AlbumId', '__RequestVerificationToken': token },
+                    success: function () {
+                        window.location = '@Url.Action("Album", new { id = ViewBag.AlbumId })'
+                    }
+                });
+            });
+        </script>
+    }

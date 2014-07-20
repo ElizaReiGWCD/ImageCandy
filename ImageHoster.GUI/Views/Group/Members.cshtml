@@ -1,0 +1,31 @@
+﻿@model PagedList.IPagedList<ImageHoster.CQRS.ReadModel.Dto.UserDto>
+@using PagedList.Mvc;
+
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+@{
+    ViewBag.Title = ViewBag.GroupName + "'s members";
+}
+
+<h2>Photos in the group "@ViewBag.GroupName"</h2>
+
+<div class="grid">
+    <div class="row">
+        @foreach (var user in Model)
+        {
+            <div class="tile" onclick="window.location.href = '@Url.Action("Index", "User", new { username = user.Username })'">
+                <div class="tile-content text">
+                    @user.Username
+                </div>
+                <div class="brand bg-black">
+                    <span class="label fg-white">@user.Username</span>
+                </div>
+            </div>
+        }
+
+    </div>
+    <div class="row">
+        <span class="place-right">Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount</span>
+        <div class="place-left" style="display:inline">@Html.PagedListPager(Model, page => Url.Action("Newest", new { page = page }), PagedListRenderOptions.Classic)</div>
+    </div>
+</div>

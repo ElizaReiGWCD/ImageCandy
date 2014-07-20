@@ -1,0 +1,15 @@
+﻿@model List<ImageHoster.GUI.Controllers.LogEntry>
+
+@{
+    ViewBag.Title = "Changelog";
+}
+
+<h1>Changelog</h1>
+
+@foreach (var entry in Model)
+{
+    <h2>Build #@entry.Revision</h2>
+    <p><small>Committed on @entry.Date by Eliza</small></p>
+    <p>@Html.Raw(entry.Message)</p>
+    <hr />
+}

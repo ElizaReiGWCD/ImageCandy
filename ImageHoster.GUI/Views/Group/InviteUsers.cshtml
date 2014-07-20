@@ -1,0 +1,70 @@
+﻿@model PagedList.PagedList<ImageHoster.CQRS.ReadModel.Dto.UserDto>
+@using PagedList.Mvc;
+
+@{
+    ViewBag.Title = "InviteUsers";
+}
+
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+<h2>Invite Users to the group @ViewBag.Name</h2>
+
+<div id="menu" class="grid">
+    <div id="usergrid" class="row">
+        @{
+            Html.RenderPartial("GetUsers", Model);
+        }
+    </div>
+    <div class="row">
+        <span class="place-right">Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount</span>
+        <div class="place-left" style="display: inline">@Html.PagedListPager(Model, page => Url.Action("GetUsers", new { page = page, id = ViewBag.GroupId }), PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing("usergrid"))</div>
+    </div>
+    <div class="row">
+        <button class="primary" id="submit">Send invites</button>
+    </div>
+</div>
+@Html.AntiForgeryToken()
+
+    @section Scripts
+    {
+        <script id="ajax" src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+        <script>
+            var guids = [];
+
+            $('#menu').on('click', function (evt) {
+
+                for (var i = 0; i < guids.length; i++) {
+                    if (guids[i] == evt.target.id) {
+                        guids[i] = "";
+                        guids = guids.filter(function (value) {
+                            return value != "";
+                        });
+                        return;
+                    }
+                }
+
+                guids.push(evt.target.id);
+
+            });
+
+            $('#submit').on('click', function (evt) {
+                var token = $('input[name="__RequestVerificationToken"]').val();
+
+                var headers = {};
+
+                headers['__RequestVerificationToken'] = token;
+
+                $.ajaxSettings.traditional = true;
+
+                $.ajax({
+                    url: '@Url.Action("InviteUsers")',
+                    type: 'POST',
+                    headers: headers,
+                    data: { 'ids': guids, 'groupId': '@ViewBag.GroupId', '__RequestVerificationToken': token },
+                    success: function () {
+                        window.location = '@Url.Action("Index", new { id = ViewBag.GroupId })'
+                    }
+                });
+            });
+        </script>
+    }

@@ -1,0 +1,77 @@
+﻿@model PagedList.PagedList<ImageHoster.CQRS.ReadModel.Dto.UserDto>
+@using PagedList.Mvc;
+
+@{
+    ViewBag.Title = "ViewJoinRequests";
+}
+
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+<h2>Requests to join the group @ViewBag.Name</h2>
+
+<div class="grid" id="grid">
+    @foreach (var user in Model)
+    {
+        <div class="row" style="border-bottom: 1px solid black; border-top: 1px solid black;" id="row-@user.Id">
+            <h3>@user.Username</h3>
+
+            @if (string.IsNullOrEmpty(user.About))
+            {
+                <p>This user has no information about itself</p>
+            }
+            else
+            {
+                <p>@user.About</p>
+            }
+
+            <div id="buttons-@user.Id">
+                @using (Html.BeginForm("AcceptRequest", "Group", FormMethod.Post, new { id = "acceptform-" + user.Id, style="display:inline;" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.Hidden("groupid", (Guid)ViewBag.GroupId)
+                    @Html.Hidden("userid", user.Id);
+                }
+                    <button class="command-button success acceptButton" style="margin: 5px" id="@user.Id">
+                        <i class="icon-thumbs-up on-left"></i>
+                        Accept
+                <small>Let the user in the group</small>
+                    </button>
+                
+
+                @using (Html.BeginForm("RejectRequest", "Group", FormMethod.Post, new { id = "rejectform-" + user.Id, style = "display:inline;" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.Hidden("groupid", (Guid)ViewBag.GroupId)
+                    @Html.Hidden("userid", user.Id);
+                }
+                    <button class="command-button place-right danger rejectButton" style="margin: 5px" id="@user.Id">
+                        <i class="icon-thumbs-down on-right"></i>
+                        Reject
+                    <small>Prevent the user from joining</small>
+                    </button>
+                
+            </div>
+        </div>
+    }
+</div>
+
+<div style="" class="">
+    <span class="place-right">Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount</span>
+
+    <div class="place-left">@Html.PagedListPager(Model, page => Url.Action("ViewJoinRequests", new { page = page }), PagedListRenderOptions.Classic)</div>
+</div>
+
+@section Scripts
+{
+    <script>
+        $('.acceptButton').on('click', function (evt) {
+            $.post('@Url.Action("AcceptRequest")', $('#acceptform-' + evt.target.id).serialize());
+            $('#buttons-' + evt.target.id).html('<p class="fg-green">You accepted the user</p>');
+        });
+
+        $('.rejectButton').on('click', function (evt) {
+            $.post('@Url.Action("RejectRequest")', $('#rejectform-' + evt.target.id).serialize());
+            $('#buttons-' + evt.target.id).html('<p class="fg-red">You rejected the user</p>');
+        });
+    </script>
+}

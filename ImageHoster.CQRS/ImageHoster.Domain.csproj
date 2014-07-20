@@ -1,0 +1,183 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{CF103759-83D6-41FD-830A-E1C8987F69C9}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ImageHoster.CQRS</RootNamespace>
+    <AssemblyName>ImageHoster.CQRS</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Commands\AcceptAlbumGroup.cs" />
+    <Compile Include="Commands\AcceptInviteOfGroup.cs" />
+    <Compile Include="Commands\AcceptJoinRequest.cs" />
+    <Compile Include="Commands\AddAlbumToGroup.cs" />
+    <Compile Include="Commands\AddInviteToUser.cs" />
+    <Compile Include="Commands\AddMemberToGroup.cs" />
+    <Compile Include="Commands\AddModeratorToGroup.cs" />
+    <Compile Include="Commands\AddPhotoToAlbum.cs" />
+    <Compile Include="Commands\AddPhotoToGroup.cs" />
+    <Compile Include="Commands\AlbumCommandHandler.cs" />
+    <Compile Include="Commands\BanAlbumFromGroup.cs" />
+    <Compile Include="Commands\BanPhotoFromGroup.cs" />
+    <Compile Include="Commands\BanUserFromGroup.cs" />
+    <Compile Include="Commands\ChangeUserInfo.cs" />
+    <Compile Include="Commands\DeleteAlbum.cs" />
+    <Compile Include="Commands\DeleteAlbumFromGroup.cs" />
+    <Compile Include="Commands\DeleteGroup.cs" />
+    <Compile Include="Commands\DeletePhoto.cs" />
+    <Compile Include="Commands\DeletePhotoFromGroup.cs" />
+    <Compile Include="Commands\EditAlbumInGroup.cs" />
+    <Compile Include="Commands\EditGroupInfo.cs" />
+    <Compile Include="Commands\EditPhotoInAlbum.cs" />
+    <Compile Include="Commands\InviteUserToGroup.cs" />
+    <Compile Include="Commands\MakeAnnouncement.cs" />
+    <Compile Include="Commands\RejectAlbumGroup.cs" />
+    <Compile Include="Commands\RejectJoinRequest.cs" />
+    <Compile Include="Commands\RejectPhotoGroupcs.cs" />
+    <Compile Include="Commands\RemoveMemberFromGroup.cs" />
+    <Compile Include="Commands\CreateAlbum.cs" />
+    <Compile Include="Commands\CreateGroup.cs" />
+    <Compile Include="Commands\EditAlbumInfo.cs" />
+    <Compile Include="Commands\EditPhotoInfo.cs" />
+    <Compile Include="Commands\GroupCommandHandler.cs" />
+    <Compile Include="Commands\PhotoCommandHandler.cs" />
+    <Compile Include="Commands\RegisterUser.cs" />
+    <Compile Include="Commands\RemoveModeratorFromGroup.cs" />
+    <Compile Include="Commands\RemovePhotoFromAlbum.cs" />
+    <Compile Include="Commands\SubmittJoinRequest.cs" />
+    <Compile Include="Commands\UploadPhoto.cs" />
+    <Compile Include="Commands\UserAcceptsInvite.cs" />
+    <Compile Include="Commands\UserCommandHandler.cs" />
+    <Compile Include="Commands\UserRejectsInvite.cs" />
+    <Compile Include="Commands\ViewNewsPage.cs" />
+    <Compile Include="Domain\Album.cs" />
+    <Compile Include="Domain\Group.cs" />
+    <Compile Include="Domain\Photo.cs" />
+    <Compile Include="Domain\Privacy.cs" />
+    <Compile Include="EntityFrameworkDatabase.cs" />
+    <Compile Include="Events\AcceptedInviteGroup.cs" />
+    <Compile Include="Events\AcceptedInviteUser.cs" />
+    <Compile Include="Events\AcceptedJoinRequest.cs" />
+    <Compile Include="Events\AcceptedPendingAlbum.cs" />
+    <Compile Include="Events\AcceptedPendingPhoto.cs" />
+    <Compile Include="Commands\AcceptPhotoGroup.cs" />
+    <Compile Include="Events\AddedAlbumToGroup.cs" />
+    <Compile Include="Events\AddedInviteToUser.cs" />
+    <Compile Include="Events\AddedModeratorToGroup.cs" />
+    <Compile Include="Events\AddedPendingAlbumToGroup.cs" />
+    <Compile Include="Events\AddedPhotoToGroup.cs" />
+    <Compile Include="Events\BannedAlbumFromGroup.cs" />
+    <Compile Include="Events\BannedPhotoFromGroup.cs" />
+    <Compile Include="Events\BannedUserFromGroup.cs" />
+    <Compile Include="Events\AddedPendingPhotoToGroup.cs" />
+    <Compile Include="Events\DeletedAlbumFromGroup.cs" />
+    <Compile Include="Events\DeletedPhotoFromGroup.cs" />
+    <Compile Include="Commands\EditPhotoInGroup.cs" />
+    <Compile Include="Events\MadeAnnouncement.cs" />
+    <Compile Include="Events\RejectedInviteUser.cs" />
+    <Compile Include="Events\RejectedJoinRequest.cs" />
+    <Compile Include="Events\RejectedPendingAlbum.cs" />
+    <Compile Include="Events\RejectedPendingPhoto.cs" />
+    <Compile Include="Events\RemovedModeratorFromGroup.cs" />
+    <Compile Include="Events\RemovedPhotoFromAlbum.cs" />
+    <Compile Include="Events\SubmittedJoinRequest.cs" />
+    <Compile Include="Events\ViewedNewsPage.cs" />
+    <Compile Include="Extensions.cs" />
+    <Compile Include="ReadModel\Dto\AlbumDto.cs" />
+    <Compile Include="ReadModel\Dto\AnnouncementDto.cs" />
+    <Compile Include="ReadModel\Dto\GroupPrivacySettings.cs" />
+    <Compile Include="ReadModel\Dto\PrivacySettings.cs" />
+    <Compile Include="Domain\User.cs" />
+    <Compile Include="Enums.cs" />
+    <Compile Include="Events\AddedPhotoToAlbum.cs" />
+    <Compile Include="Events\ChangedAlbumInfo.cs" />
+    <Compile Include="Events\ChangedGroupInfo.cs" />
+    <Compile Include="Events\ChangedPhotoInfo.cs" />
+    <Compile Include="Events\CreatedAlbum.cs" />
+    <Compile Include="Events\CreatedGroup.cs" />
+    <Compile Include="Events\DeletedAlbum.cs" />
+    <Compile Include="Events\DeletedGroup.cs" />
+    <Compile Include="Events\DeletedPhoto.cs" />
+    <Compile Include="Events\MemberAddedToGroup.cs" />
+    <Compile Include="Events\PhotoUploaded.cs" />
+    <Compile Include="Events\RegisteredUser.cs" />
+    <Compile Include="Events\RemovedMemberFromGroup.cs" />
+    <Compile Include="Events\UpdatedUserInfo.cs" />
+    <Compile Include="ReadModel\Dto\GroupDto.cs" />
+    <Compile Include="ReadModel\Dto\PhotoDto.cs" />
+    <Compile Include="ReadModel\Dto\UserDetailDto.cs" />
+    <Compile Include="ReadModel\EFEventHandlers\AlbumEventHandler.cs" />
+    <Compile Include="ReadModel\EFEventHandlers\GroupEventHandler.cs" />
+    <Compile Include="ReadModel\EFEventHandlers\PhotoEventHandler.cs" />
+    <Compile Include="ReadModel\EFEventHandlers\UserEventHandler.cs" />
+    <Compile Include="ReadModel\EFReadModel.cs" />
+    <Compile Include="ReadModel\Eventhandlers\AlbumEventHandler.cs" />
+    <Compile Include="ReadModel\Eventhandlers\GroupEventHandler.cs" />
+    <Compile Include="ReadModel\Eventhandlers\PhotoEventHandler.cs" />
+    <Compile Include="ReadModel\Eventhandlers\UserEventHandler.cs" />
+    <Compile Include="ReadModel\InMemoryReadModel.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="InMemoryDatabase.cs" />
+    <Compile Include="ReadModel\IReadModel.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Sogyo.CQRS.Library.Infrastructure\ImageHoster.CQRS.Infrastructure.csproj">
+      <Project>{e02f152f-faae-46e7-a7ca-e5d88c66355f}</Project>
+      <Name>ImageHoster.CQRS.Infrastructure</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

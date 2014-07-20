@@ -1,0 +1,18 @@
+﻿@model ImageHoster.GUI.Models.User.NewsViewModel
+
+@{
+    ViewBag.Title = "News";
+}
+
+<h2>News</h2>
+
+@foreach (var a in Model.Announcements)
+{
+    <h3>Announcement in @a.Group.Name</h3>
+    <h4>@a.Title</h4>
+    <p>
+        <small>Made by @a.Announcer.Username on @a.Time.ToShortDateString()</small><br />
+        @a.Announcement
+    </p>
+    <hr />
+}

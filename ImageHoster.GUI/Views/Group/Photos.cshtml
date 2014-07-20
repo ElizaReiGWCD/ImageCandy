@@ -1,0 +1,31 @@
+﻿@model PagedList.IPagedList<ImageHoster.CQRS.ReadModel.Dto.PhotoDto>
+@using PagedList.Mvc;
+
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+@{
+    ViewBag.Title = ViewBag.GroupName + "'s photos";
+}
+
+<h2>Photos in the group "@ViewBag.GroupName"</h2>
+
+<div>
+    @foreach (var photo in Model)
+    {
+        <div class="image-container span3 shadow" style="display: inline-block; margin: 5px">
+        <a href="@Url.Action("Detail", "Photo", new { id = photo.Id })">
+            <img src="@Url.Action("GetThumbnail", "Photo", new { filename = photo.FileName })" class="" /></a>
+        @if (!string.IsNullOrEmpty(photo.Title))
+        {
+            <div class="overlay-fluid">
+                @photo.Title
+            </div>
+        }
+    </div>
+    }
+</div>
+<div style="" class="">
+    <span class="place-right">Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount</span>
+
+    <div class="place-left">@Html.PagedListPager(Model, page => Url.Action("Newest", new { page = page }), PagedListRenderOptions.Classic)</div>
+</div>

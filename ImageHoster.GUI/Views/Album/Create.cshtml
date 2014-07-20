@@ -1,0 +1,40 @@
+﻿@model ImageHoster.GUI.Models.Album.CreateAlbumViewModel
+
+@{
+    ViewBag.Title = "CreateAlbum";
+}
+
+<h2>Create a new album</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <div class="editor-label">
+        @Html.LabelFor(model => model.Title)
+    </div>
+    <div class="editor-field input-control text size4">
+        @Html.EditorFor(model => model.Title)
+        <span class="fg-red">@Html.ValidationMessageFor(model => model.Title)</span>
+    </div>
+
+    <div class="editor-label">
+        @Html.LabelFor(model => model.Description)
+    </div>
+    <div class="editor-field input-control textarea size4">
+        @Html.TextAreaFor(model => model.Description)
+        <span class="fg-red">@Html.ValidationMessageFor(model => model.Description)</span>
+    </div>
+    
+    Html.RenderPartial("_PrivacyFormPartial", Model.Privacy);
+    
+    <p>
+        <input type="submit" value="Create" />
+    </p>
+}
+
+@section Scripts
+{
+    @Html.Partial("_PrivacyFormJs");
+}

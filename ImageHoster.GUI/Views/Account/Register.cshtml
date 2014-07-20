@@ -1,0 +1,77 @@
+﻿@model ImageHoster.GUI.Models.User.RegisterViewModel
+
+@{
+    ViewBag.Title = "Register";
+}
+
+<h2>Register</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <div class="editor-label">
+        @Html.LabelFor(model => model.Username)
+    </div>
+    <div class="editor-field input-control text size4">
+        @Html.EditorFor(model => model.Username)
+        <span class="fg-red">@Html.ValidationMessageFor(model => model.Username)</span>
+    </div>
+
+    <div class="editor-label">
+        @Html.LabelFor(model => model.Password)
+    </div>
+    <div class="editor-field input-control password size4">
+        @Html.EditorFor(model => model.Password)
+        <span class="fg-red">@Html.ValidationMessageFor(model => model.Password)</span>
+    </div>
+
+    <div class="editor-label">
+        @Html.LabelFor(model => model.Email)
+    </div>
+    <div class="editor-field input-control text size4">
+        @Html.EditorFor(model => model.Email)
+        <span class="fg-red">@Html.ValidationMessageFor(model => model.Email)</span>
+    </div>
+
+    <div class="editor-label">
+        @Html.LabelFor(model => model.FirstName)
+    </div>
+    <div class="editor-field input-control text size4">
+        @Html.EditorFor(model => model.FirstName)
+        <span class="fg-red">@Html.ValidationMessageFor(model => model.FirstName)</span>
+    </div>
+
+    <div class="editor-label">
+        @Html.LabelFor(model => model.LastName)
+    </div>
+    <div class="editor-field input-control text size4">
+        @Html.EditorFor(model => model.LastName)
+        <span class="fg-red">@Html.ValidationMessageFor(model => model.LastName)</span>
+    </div>
+
+    <div class="editor-label">
+        @Html.LabelFor(model => model.Sex)
+    </div>
+    <div class="editor-field input-control select size2">
+        @Html.DropDownListFor(model => model.Sex, new List<SelectListItem>() { new SelectListItem() { Text = "Man", Value = "Man", Selected = true }, new SelectListItem() { Text = "Woman", Value = "Woman" }, new SelectListItem() { Text = "Other", Value = "Other" } })
+        <span class="fg-red">@Html.ValidationMessageFor(model => model.Sex)</span>
+    </div>
+
+    <div class="editor-label">
+        @Html.LabelFor(model => model.About)
+    </div>
+    <div class="editor-field input-control textarea size4">
+        @Html.TextAreaFor(model => model.About)
+        <span class="fg-red">@Html.ValidationMessageFor(model => model.About)</span>
+    </div>
+
+    <p>
+        <input type="submit" value="Register" />
+    </p>
+}
+
+@section Scripts {
+    @*@Scripts.Render("~/bundles/jqueryval")*@
+}

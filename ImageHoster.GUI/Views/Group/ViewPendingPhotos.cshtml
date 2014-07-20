@@ -1,0 +1,68 @@
+﻿@model List<ImageHoster.CQRS.ReadModel.Dto.PhotoDto>
+
+@{
+    ViewBag.Title = "ViewPendingPhotos";
+}
+
+<h2>Pending Photos</h2>
+
+<div class="grid" id="grid">
+    @foreach (var photo in Model)
+    {
+        <div class="row" style="border-bottom: 1px solid black; border-top: 1px solid black;" id="row-@photo.Id">
+            <h3>@photo.Title</h3>
+
+            @if (string.IsNullOrEmpty(photo.Description))
+            {
+                <p>This photo has no description</p>
+            }
+            else
+            {
+                <p>@photo.Description</p>
+            }
+
+            <div id="buttons-@photo.Id">
+                @using (Html.BeginForm("AcceptRequest", "Group", FormMethod.Post, new { id = "acceptform-" + photo.Id, style="display:inline;" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.Hidden("groupid", (Guid)ViewBag.GroupId)
+                    @Html.Hidden("photoid", photo.Id);
+                }
+                    <button class="command-button success acceptButton" style="margin: 5px" id="@photo.Id">
+                        <i class="icon-thumbs-up on-left"></i>
+                        Accept
+                <small>Show the photo in the group</small>
+                    </button>
+                
+
+                @using (Html.BeginForm("RejectRequest", "Group", FormMethod.Post, new { id = "rejectform-" + photo.Id, style = "display:inline;" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.Hidden("groupid", (Guid)ViewBag.GroupId)
+                    @Html.Hidden("photoid", photo.Id);
+                }
+                    <button class="command-button place-right danger rejectButton" style="margin: 5px" id="@photo.Id">
+                        <i class="icon-thumbs-down on-right"></i>
+                        Reject
+                    <small>Don't show the photo in the group</small>
+                    </button>
+                
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts
+{
+    <script>
+        $('.acceptButton').on('click', function (evt) {
+            $.post('@Url.Action("AcceptPhoto")', $('#acceptform-' + evt.target.id).serialize());
+            $('#buttons-' + evt.target.id).html('<p class="fg-green">You accepted the photo</p>');
+        });
+
+        $('.rejectButton').on('click', function (evt) {
+            $.post('@Url.Action("RejectPhoto")', $('#rejectform-' + evt.target.id).serialize());
+            $('#buttons-' + evt.target.id).html('<p class="fg-red">You rejected the photo</p>');
+        });
+    </script>
+}

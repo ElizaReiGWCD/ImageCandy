@@ -1,0 +1,109 @@
+﻿@model ImageHoster.GUI.Models.User.UserDetailViewModel
+@{
+    ViewBag.Title = "Profile";
+}
+@if (Model != null)
+{
+    <h1>Profile</h1>
+
+    <h4>
+        @Html.DisplayNameFor(model => model.User.Username)
+    </h4>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.User.Username)
+    </div>
+
+    <h4>Name
+    </h4>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.User.FirstName) @Html.DisplayFor(model => model.User.LastName)
+    </div>
+
+    <h4>
+        @Html.DisplayNameFor(model => model.User.Sex)
+    </h4>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.User.Sex)
+    </div>
+
+    <h4>
+        @Html.DisplayNameFor(model => model.User.About)
+    </h4>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.User.About)
+    </div>
+    
+    <div style="display: block">
+        <h2 style="display: inline">Photos</h2>
+        <a href="@Url.Action("Photos", new { username = Model.User.Username })" class="place-right">View all</a>
+    </div>
+    if (Model.Photos.Count() > 0)
+    {
+        foreach(var photo in Model.Photos)
+        {
+    <div class="image-container span3 shadow" style="display: inline-block; margin: 5px">
+        <a href="@Url.Action("Detail", "Photo", new { id = photo.Id })">
+            <img src="@Url.Action("GetThumbnail", "Photo", new { filename = photo.FileName })" class="" /></a>
+        @if (!string.IsNullOrEmpty(photo.Title))
+        {
+            <div class="overlay-fluid">
+                @photo.Title
+            </div>
+        }
+    </div>
+        }
+    }
+    else
+    {
+    <p>@Model.User.Username hasn't uploaded any photos yet</p>
+    }
+    
+    <div style="display: block">
+        <h2 style="display: inline">Albums</h2>
+        <a href="@Url.Action("Albums", new { username = Model.User.Username })" class="place-right">View all</a>
+    </div>
+    if (Model.Albums.Count() > 0)
+    {
+        foreach(var album in Model.Albums)
+        {
+    <div class="image-container span3 shadow" style="display: inline-block; margin: 5px">
+        <a href="@Url.Action("Album", "Album", new { id = album.Id })">
+            <img src="@Url.Action("GetThumbnail", "Photo", new { filename = album.FrontPhoto != null ? album.FrontPhoto.FileName : "" })" class="" /></a>
+        <div class="overlay">
+            @album.Title
+        </div>
+    </div>
+        }
+    }
+    else
+    {
+    <p>@Model.User.Username hasn't made any albums yet</p>
+    }
+    
+    <div style="display: block">
+        <h2 style="display: inline">Groups</h2>
+        <a href="@Url.Action("Groups", new { username = Model.User.Username })" class="place-right">View all</a>
+    </div>
+    if (Model.Groups.Count() > 0)
+    {
+        foreach (var item in Model.Groups)
+        {
+    <div class="tile double" onclick="window.location.href = '@Url.Action("Index", "Group", new { id = item.Id })'">
+        <div class="tile-content">
+        </div>
+        <div class="brand bg-black">
+            <span class="label fg-white">@item.Name</span>
+        </div>
+    </div>
+        }
+    }
+    else
+    {
+    <p>@Model.User.Username hasn't joined any groups yet</p>
+    }
+}
+else
+{
+    <h2>User does not exist</h2>
+    <p>Sorry, this user does not exist, maybe you mistyped?</p>   
+}

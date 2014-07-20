@@ -1,0 +1,11 @@
+﻿@model PagedList.PagedList<ImageHoster.CQRS.ReadModel.Dto.PhotoDto>
+
+
+@foreach (var photo in Model)
+{
+    <div class="tile" id="@photo.Id" onclick="$('#@photo.Id').toggleClass('selected')">
+        <div class="tile-content image" id="@photo.Id">
+            <img src="@Url.Action("GetThumbnail", "Photo", new { filename = photo.FileName })" id="@photo.Id">
+        </div>
+    </div>
+}

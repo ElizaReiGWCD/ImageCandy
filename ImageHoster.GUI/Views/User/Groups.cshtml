@@ -1,0 +1,27 @@
+﻿@model IEnumerable<Tuple<ImageHoster.CQRS.ReadModel.Dto.GroupDto, string>>
+
+@{
+    ViewBag.Title = "Groups";
+}
+
+<h2>Groups of @Html.ActionLink((string)ViewBag.Username, "Index", new { username = ViewBag.Username })</h2>
+
+@if (Session["user"] != null && (string)ViewBag.Username == ((ImageHoster.CQRS.ReadModel.Dto.UserDto)Session["user"]).Username)
+{
+    <p>
+         <button onclick="window.location = '@Url.Action("Create", "Group")'" class="button" type="button"><i class="icon-plus-2 on-left"></i>Create Group</button>
+         <button onclick="window.location = '@Url.Action("GroupInvites", "User")'" class="button" type="button"><i class="icon-eye on-left"></i>View Invites</button>
+    </p>
+}
+
+@foreach (var item in Model)
+{
+    <div class="tile double" onclick="window.location.href = '@Url.Action("Index", "Group", new { id = item.Item1.Id })'">
+        <div class="tile-content">
+            <img src="@Url.Action("GetThumbnail", "Photo", new { filename = item.Item2 })" />
+        </div>
+        <div class="brand bg-black">
+            <span class="label fg-white">@item.Item1.Name</span>
+        </div>
+    </div>
+}

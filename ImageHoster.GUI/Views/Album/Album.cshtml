@@ -1,0 +1,74 @@
+﻿@model ImageHoster.GUI.Models.Album.AlbumDetailViewModel
+@{
+    ViewBag.Title = "Album";
+}
+
+<div class="progress-bar" id="uploadProgress" data-color="blue" style="display: none"></div>
+<div class="progress-bar" id="globalProgress" data-color="blue" style="display: none"></div>
+
+@if (Session["username"] != null && Model.Username == Session["username"].ToString())
+{
+    using (Html.BeginForm("Delete", "Album", FormMethod.Post, new { id = "deleteForm" }))
+    {
+    @Html.AntiForgeryToken()
+    @Html.Hidden("id", Model.Album.Id)
+    <div style="margin:5px">
+        <button onclick="window.location = '@Url.Action("Edit", "Album", new { id = Model.Album.Id })'" class="button" type="button"><i class="icon-pencil on-left"></i>Edit Album</button>
+        <button id="addImages" class="button" type="button"><i class="icon-plus-2 on-left"></i>Add Images</button>
+        <button id="removeImages" class="button" type="button"><i class="icon-minus-2 on-left"></i>Remove Images</button>
+        <button class="button" type="submit"><i class="icon-remove on-left"></i>Delete Album...</button>
+    </div>
+    }
+
+}
+
+<h2>@Model.Album.Title</h2>
+
+@if (!string.IsNullOrEmpty(Model.Album.Description))
+{
+    <p>@Model.Album.Description</p>
+}
+
+@foreach(var photo in Model.Album.Photos)
+{
+        <a href="@Url.Action("Detail", "Photo", new { id = photo.Id })">
+            <img src="@Url.Action("GetImage", "Photo", new { filename = photo.FileName })" class="shadow" style="margin:5px" /></a>
+}
+
+
+
+@section Scripts {
+
+    <script src="~/Scripts/jquery.filedrop.js"></script>
+    <script>
+        $(function () {
+            $('.metro').filedrop({
+                url: '@Url.Action("UploadToAlbum", "Photo", new { albumId = Model.Album.Id })',
+                paramname: 'files',
+                maxFiles: 99,
+                uploadStarted: function (i, file, len) {
+                    var percentage = (i / len) * 100;
+                    $('.progress-bar').show();
+                    $('#globalProgress').progressbar({
+                        value: percentage
+                    });
+                },
+                progressUpdated: function (i, file, progress) {
+                    $('#uploadProgress').progressbar({
+                        value: progress
+                    });
+                },
+                uploadFinished: function (i, file, response, time) {
+                    $('.progress-bar').hide();
+                }
+            });
+        });
+
+        $('#addImages').on('click', function () {
+            window.location = '@Url.Action("AddImages", "Album", new { id = Model.Album.Id })';
+        });
+        $('#removeImages').on('click', function () {
+            window.location = '@Url.Action("RemoveImages", "Album", new { id = Model.Album.Id })';
+        });
+    </script>
+}

@@ -1,0 +1,14 @@
+﻿@model PagedList.PagedList<ImageHoster.CQRS.ReadModel.Dto.UserDto>
+
+
+@foreach (var user in Model)
+{
+    <div class="tile" id="@user.Id" onclick="$('#@user.Id').toggleClass('selected')">
+        <div class="tile-content" id="@user.Id">
+            <p>@user.Username</p>
+        </div>
+        <div class="brand bg-black">
+            <span class="label fg-white">@user.Username</span>
+        </div>
+    </div>
+}

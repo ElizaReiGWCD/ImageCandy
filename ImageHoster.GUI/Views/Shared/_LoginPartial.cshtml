@@ -1,0 +1,38 @@
+﻿@using ImageHoster.CQRS.ReadModel.Dto;
+
+@{
+    Layout = null;
+}
+
+@if (Session["user"] != null)
+{
+    UserDto user = (UserDto)Session["user"];
+    
+    using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+    {
+    @Html.AntiForgeryToken()
+
+    <a href="javascript:document.getElementById('logoutForm').submit()" class="element place-right">Log off</a>
+   }
+    
+    <div class="element place-right">
+        <a class="dropdown-toggle" href="#">Hello @user.Username!</a>
+        <ul class="dropdown-menu" data-role="dropdown">
+            <li>@Html.ActionLink("Profile", "Index", "User", routeValues: new { username = user.Username }, htmlAttributes: new { })</li>
+            <li>@Html.ActionLink("Photos", "Photos", "User", routeValues: new { username = user.Username }, htmlAttributes: new { })</li>
+            <li>@Html.ActionLink("Albums", "Albums", "User", routeValues: new { username = user.Username }, htmlAttributes: new { })</li>
+            <li>@Html.ActionLink("Groups", "Groups", "User", routeValues: new { username = user.Username }, htmlAttributes: new { })</li>
+        </ul>
+    </div>
+    
+    <span class="element-divider place-right"></span>
+    <a href="@Url.Action("Manage", "Account")" class="element place-right"><span class="icon-locked-2"></span></a>
+    <span class="element-divider place-right"></span>
+    
+    @Html.ActionLink("News (" + user.NewsCount + ")", "News", "User", new { username = user.Username }, new { @class = "element place-right" })
+}
+else
+{
+    @Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink", @class = "element place-right" })
+    @Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink", @class = "element place-right" })
+}

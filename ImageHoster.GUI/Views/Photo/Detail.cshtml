@@ -1,0 +1,29 @@
+﻿@model ImageHoster.GUI.Models.Photo.PhotoViewModel
+
+@{
+    ViewBag.Title = "Photo";
+}
+
+@if (Session["user"] != null && Model.Username == ((ImageHoster.CQRS.ReadModel.Dto.UserDto)Session["user"]).Username)
+{
+    using (Html.BeginForm("Delete", "Photo", FormMethod.Post, new { id = "deleteForm" }))
+    {
+    @Html.AntiForgeryToken()
+    @Html.Hidden("id", Model.Id)
+    <div style="margin: 5px">
+        <button onclick="window.location = '@Url.Action("Edit", "Photo", new { id = Model.Id })'" class="button" type="button"><i class="icon-pencil on-left"></i>Edit Photo</button>
+        <button class="button" type="submit"><i class="icon-remove on-left"></i>Delete Photo</button>
+    </div>
+    }
+
+}
+
+@if (!string.IsNullOrEmpty(Model.Title))
+{
+    <h2>@Model.Title</h2>
+}
+
+<a href="@Url.Action("GetImage", "Photo", new { filename = Model.Filename })">
+    <img src="@Url.Action("GetImage", "Photo", new { filename = Model.Filename })" class="shadow" style="margin:5px" /></a>
+<p><small>Uploaded by: @Html.ActionLink(Model.Username, "Index", "User", new { username = Model.Username }, new { })</small></p>
+<p>@Model.Description</p>

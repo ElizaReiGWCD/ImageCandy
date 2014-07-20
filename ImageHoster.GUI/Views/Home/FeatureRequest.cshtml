@@ -1,0 +1,45 @@
+﻿@model ImageHoster.GUI.Models.FeatureRequestViewModel
+
+@{
+    ViewBag.Title = "FeatureRequest";
+}
+
+<h2>FeatureRequest</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <div class="editor-label">
+        @Html.LabelFor(model => model.Title)
+    </div>
+    <div class="editor-field input-control text size4">
+        @Html.EditorFor(model => model.Title)
+        <span class="fg-red">@Html.ValidationMessageFor(model => model.Title)</span>
+    </div>
+
+    <div class="editor-label">
+        @Html.LabelFor(model => model.Description)
+    </div>
+    <div class="editor-field input-control textarea size4">
+        @Html.TextAreaFor(model => model.Description, new { placeholder = "Please explain what feature you want to see on the site. Be as specific as possible!" })
+        <span class="fg-red">@Html.ValidationMessageFor(model => model.Description)</span>
+    </div>
+    
+    <div class="editor-label">
+        @Html.LabelFor(model => model.Email)
+    </div>
+    <div class="editor-field input-control text size4">
+        @Html.EditorFor(model => model.Email)
+        <span class="fg-red">@Html.ValidationMessageFor(model => model.Email)</span>
+    </div>
+    
+    <p>
+        <input type="submit" value="Send" />
+    </p>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>

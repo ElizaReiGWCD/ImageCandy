@@ -1,0 +1,31 @@
+﻿<script>
+    $('#selectedpriv').change(function () {
+        var value = $('#selectedpriv option:selected').text();
+        var desc = $('#selectedpriv option:selected').attr('data-description');
+
+        if (value === 'Group') {
+            $('#groupselect').show();
+        }
+        else {
+            $('#groupselect').hide();
+        }
+
+        $('#privacytext').html(desc);
+    });
+
+    $(function () {
+        $('#selectedpriv').attr('name', 'Privacy.Level');
+        $('#groups').attr('name', 'Privacy.SelectedGroups');
+        var value = $('#selectedpriv option:selected').text();
+        var desc = $('#selectedpriv option:selected').attr('data-description');
+
+        if (value === 'Group') {
+            $('#groupselect').show();
+        }
+        else {
+            $('#groupselect').hide();
+        }
+
+        $('#privacytext').html(desc);
+    })
+</script>

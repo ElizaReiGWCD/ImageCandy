@@ -1,0 +1,54 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/metro-ui/css")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body class="metro">
+    <nav class="navigation-bar bg-black">
+        <nav class="navigation-bar-content container">
+
+
+            <span class="element-divider"></span>
+            @Html.ActionLink("Home", "Index", "Home", routeValues: null, htmlAttributes: new { id = "homeLink", @class = "element" })
+            <span class="element-divider"></span>
+
+            <div class="element">
+                <a class="dropdown-toggle" href="#">Browse Groups</a>
+                <ul class="dropdown-menu" data-role="dropdown">
+                    <li>@Html.ActionLink("Newest...", "Newest", "Group", routeValues: new { page = 1 }, htmlAttributes: new { })</li>
+                    <li>@Html.ActionLink("Most Popular...", "MostPopular", "Group", routeValues: new { page = 1 }, htmlAttributes: new { })</li>
+                    <li>@Html.ActionLink("Random...", "Random", "Group")</li>
+                </ul>
+            </div>
+
+            <span class="element-divider"></span>
+
+            <div>
+                @RenderSection("TopBar", false)
+            </div>
+
+            <div class="element place-right">
+                <a class="dropdown-toggle" href="#"><span class="icon-info"></span></a>
+                <ul class="dropdown-menu" data-role="dropdown">
+                    <li>@Html.ActionLink("Changelog", "Changelog", "Home")</li>
+                    <li>@Html.ActionLink("Request a Feature", "FeatureRequest", "Home")</li>
+                </ul>
+            </div>
+
+            @Html.Partial("_LoginPartial")
+
+        </nav>
+    </nav>
+    <div class="container" id="content">
+        @RenderBody()
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/metro-ui")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

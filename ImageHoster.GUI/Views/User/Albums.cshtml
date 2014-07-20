@@ -1,0 +1,25 @@
+﻿@model ImageHoster.GUI.Models.Album.AlbumListViewModel
+
+@{
+    ViewBag.Title = "Albums";
+}
+
+<h2>Albums of @Html.ActionLink(Model.Username, "Index", "User")</h2>
+
+@if (Session["user"] != null && Model.Username == ((ImageHoster.CQRS.ReadModel.Dto.UserDto)Session["user"]).Username)
+{
+    <p>
+        <button onclick="window.location = '@Url.Action("Create", "Album")'" class="button" type="button"><i class="icon-grid-view on-left"></i>Create Album</button>
+    </p>
+}
+
+@foreach(var album in Model.Albums)
+{
+    <div class="image-container span3 shadow" style="display: inline-block; margin: 5px">
+        <a href="@Url.Action("Album", "Album", new { id = album.Id })">
+            <img src="@Url.Action("GetThumbnail", "Photo", new { filename = album.FrontPhoto != null ? album.FrontPhoto.FileName : "" })" class="" /></a>
+        <div class="overlay">
+            @album.Title
+        </div>
+    </div>
+}

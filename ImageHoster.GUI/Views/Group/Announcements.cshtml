@@ -1,0 +1,16 @@
+﻿@model List<ImageHoster.CQRS.ReadModel.Dto.AnnouncementDto>
+
+@{
+    ViewBag.Title = "Announcements";
+}
+
+<h2>Announcements</h2>
+
+@foreach (var a in Model)
+{
+    <h3>@a.Title</h3>
+    <p>
+        <small>Made by @a.Announcer.Username on @a.Time.ToShortDateString()</small><br />
+        @a.Announcement
+    </p>
+}

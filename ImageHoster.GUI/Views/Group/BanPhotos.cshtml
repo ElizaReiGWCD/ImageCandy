@@ -1,0 +1,69 @@
+﻿@model List<ImageHoster.CQRS.ReadModel.Dto.PhotoDto>
+
+@{
+    ViewBag.Title = "BanAlbums";
+}
+
+<h2>Ban Albums</h2>
+
+<div id="menu" class="grid">
+    <div class="row">
+        @foreach (var photo in Model)
+        {
+            <div class="tile" id="@photo.Id" onclick="$('#@photo.Id').toggleClass('selected')">
+                <div class="tile-content image" id="@photo.Id">
+                    <img src="@Url.Action("GetThumbnail", "Photo", new { filename = photo.FileName })" id="@photo.Id">
+                </div>
+            </div>
+        }
+    </div>
+    <div class="row">
+        <button class="primary" id="submit">Ban photos from group</button>
+    </div>
+</div>
+
+@Html.AntiForgeryToken()
+
+@section Scripts
+    {
+    <script id="ajax" src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+    <script>
+        var guids = [];
+
+        $('#menu').on('click', function (evt) {
+
+            for (var i = 0; i < guids.length; i++) {
+                if (guids[i] == evt.target.id) {
+                    guids[i] = "";
+                    guids = guids.filter(function (value) {
+                        return value != "";
+                    });
+                    return;
+                }
+            }
+
+            guids.push(evt.target.id);
+
+        });
+
+        $('#submit').on('click', function (evt) {
+            var token = $('input[name="__RequestVerificationToken"]').val();
+
+            var headers = {};
+
+            headers['__RequestVerificationToken'] = token;
+
+            $.ajaxSettings.traditional = true;
+
+            $.ajax({
+                url: '@Url.Action("BanPhotos")',
+                type: 'POST',
+                headers: headers,
+                data: { 'ids': guids, 'GroupId': '@ViewBag.GroupId', '__RequestVerificationToken': token },
+                    success: function () {
+                        window.location = '@Url.Action("Index", new { id = ViewBag.GroupId })'
+                    }
+            });
+        });
+    </script>
+}

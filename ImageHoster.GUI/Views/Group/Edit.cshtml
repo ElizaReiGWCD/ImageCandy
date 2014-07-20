@@ -1,0 +1,84 @@
+﻿@model ImageHoster.GUI.Models.Group.EditGroupViewModel
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Edit</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    @Html.HiddenFor(model => model.Id)
+
+    <div class="editor-label">
+        @Html.LabelFor(model => model.Name)
+    </div>
+    <div class="editor-field input-control text size4">
+        @Html.EditorFor(model => model.Name)
+        @Html.ValidationMessageFor(model => model.Name)
+    </div>
+
+    <div class="editor-label">
+        @Html.LabelFor(model => model.Description)
+    </div>
+    <div class="editor-field input-control textarea size6">
+        @Html.TextAreaFor(model => model.Description)
+        @Html.ValidationMessageFor(model => model.Description)
+    </div>
+
+    <div class="editor-label">
+        @Html.LabelFor(model => model.Level)
+    </div>
+    <div class="editor-field input-control textarea size6">
+        @Html.EnumDropDownListFor(model => model.Level)
+        <span class="fg-red">@Html.ValidationMessageFor(model => model.Level)</span>
+    </div>
+    
+    <br />
+    <div class="input-control checkbox">
+        <label>
+            <input type="checkbox" @(Model.GroupVisibleToOutsiders ? "checked" : "") value ="true" name="@Html.NameFor(model => Model.GroupVisibleToOutsiders)" data-val-required="The photos of this group can be seen by users from outside the group field is required." data-val="true"/>
+            <input type="hidden" value="false" name="@Html.NameFor(model => Model.GroupVisibleToOutsiders)">
+            <span class="check"></span>
+            @Html.DisplayNameFor(model => model.GroupVisibleToOutsiders)
+        </label>
+    </div>
+    <br />
+    <div class="input-control checkbox">
+        <label>
+            <input type="checkbox" @(Model.PhotosVisibleToOutsiders ? "checked" : "") value ="true" name="@Html.NameFor(model => Model.PhotosVisibleToOutsiders)" data-val-required="The photos of this group can be seen by users from outside the group field is required." data-val="true"/>
+            <input type="hidden" value="false" name="@Html.NameFor(model => Model.PhotosVisibleToOutsiders)">
+            <span class="check"></span>
+            @Html.DisplayNameFor(model => model.PhotosVisibleToOutsiders)
+        </label>
+    </div>
+    <br />
+    <div class="input-control checkbox">
+        <label>
+            <input type="checkbox" @(Model.MembersVisibleToOutsiders ? "checked" : "") value ="true" name="@Html.NameFor(model => Model.MembersVisibleToOutsiders)" data-val-required="The members of this group can be seen by users from outside the group field is required." data-val="true"/>
+            <input type="hidden" value="false" name="@Html.NameFor(model => Model.MembersVisibleToOutsiders)">
+            <span class="check"></span>
+            @Html.DisplayNameFor(model => model.MembersVisibleToOutsiders)
+        </label>
+    </div>
+    <br />
+    <div class="input-control checkbox">
+        <label>
+            <input type="checkbox" @(Model.AcceptPhotos ? "checked" : "") value ="true" name="@Html.NameFor(model => Model.AcceptPhotos)" data-val-required="The members of this group can be seen by users from outside the group field is required." data-val="true"/>
+            <input type="hidden" value="false" name="@Html.NameFor(model => Model.AcceptPhotos)">
+            <span class="check"></span>
+            @Html.DisplayNameFor(model => model.AcceptPhotos)
+        </label>
+    </div>
+    <br />
+    <p>
+        <input type="submit" value="Save" />
+    </p>
+}
+
+<div>
+    @Html.ActionLink("Back to Group", "Index", new { id = Model.Id })
+</div>

@@ -1,0 +1,112 @@
+﻿@model ImageHoster.GUI.Models.Group.CreateGroupViewModel
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Create</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <div class="editor-label">
+        @Html.LabelFor(model => model.Name)
+    </div>
+    <div class="editor-field input-control text size4">
+        @Html.EditorFor(model => model.Name)
+        <span class="fg-red">@Html.ValidationMessageFor(model => model.Name)</span>
+    </div>
+
+    <div class="editor-label">
+        @Html.LabelFor(model => model.Description)
+    </div>
+    <div class="editor-field input-control textarea size6">
+        @Html.TextAreaFor(model => model.Description)
+        <span class="fg-red">@Html.ValidationMessageFor(model => model.Description)</span>
+    </div>
+
+    <div class="editor-label">
+        @Html.LabelFor(model => model.Level)
+    </div>
+    <div class="editor-field input-control textarea size6">
+        @Html.EnumDropDownListFor(model => model.Level, new{ id = "privacy"})
+        <span class="fg-red">@Html.ValidationMessageFor(model => model.Level)</span>
+    </div>
+    
+    <p class="tertiary-text-secondary" id="privacytext">This is some text</p>
+    
+    <br />
+    <div class="input-control checkbox">
+        <label>
+            <input type="checkbox" value ="true" name="@Html.NameFor(model => Model.GroupVisibleToOutsiders)" data-val-required="The photos of this group can be seen by users from outside the group field is required." data-val="true"/>
+            <input type="hidden" value="false" name="@Html.NameFor(model => Model.GroupVisibleToOutsiders)">
+            <span class="check"></span>
+            @Html.DisplayNameFor(model => model.GroupVisibleToOutsiders)
+        </label>
+    </div>
+    <br />
+    <div class="input-control checkbox">
+        <label>
+            <input type="checkbox" value ="true" name="@Html.NameFor(model => Model.PhotosVisibleToOutsiders)" data-val-required="The photos of this group can be seen by users from outside the group field is required." data-val="true"/>
+            <input type="hidden" value="false" name="@Html.NameFor(model => Model.PhotosVisibleToOutsiders)">
+            <span class="check"></span>
+            @Html.DisplayNameFor(model => model.PhotosVisibleToOutsiders)
+        </label>
+    </div>
+    <br />
+    <div class="input-control checkbox">
+        <label>
+            <input type="checkbox" value ="true" name="@Html.NameFor(model => Model.MembersVisibleToOutsiders)" data-val-required="The members of this group can be seen by users from outside the group field is required." data-val="true"/>
+            <input type="hidden" value="false" name="@Html.NameFor(model => Model.MembersVisibleToOutsiders)">
+            <span class="check"></span>
+            @Html.DisplayNameFor(model => model.MembersVisibleToOutsiders)
+        </label>
+    </div>
+    <br />
+    <div class="input-control checkbox">
+        <label>
+            <input type="checkbox" value ="true" name="@Html.NameFor(model => Model.AcceptPhotos)" data-val-required="The members of this group can be seen by users from outside the group field is required." data-val="true"/>
+            <input type="hidden" value="false" name="@Html.NameFor(model => Model.AcceptPhotos)">
+            <span class="check"></span>
+            @Html.DisplayNameFor(model => model.AcceptPhotos)
+        </label>
+    </div>
+    <br />
+    <p>
+        <input type="submit" value="Create" />
+    </p>
+    
+    @section Scripts{
+        <script>
+            function changeText() {
+                var value = $('#privacy');
+                var index = value[0].options.selectedIndex;
+                var string = '';
+
+                switch (index) {
+                    case 0:
+                        string = 'The group is public, anyone can join at will';
+                        break;
+                    case 1:
+                        string = 'The group is semi-public. Anyone can ask to join but a moderator has to approve every request to join'
+                        break;
+                    case 2:
+                        string = 'The group is private. Moderators have to invite users to join.'
+                        break;
+                }
+
+                $('#privacytext').html(string);
+            }
+
+            $(function () {
+                changeText();
+            });
+
+            $('#privacy').change(function (evt) {
+                changeText();
+            });
+        </script>
+    }
+}

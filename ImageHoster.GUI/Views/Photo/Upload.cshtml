@@ -1,0 +1,40 @@
+﻿@model ImageHoster.GUI.Models.Photo.PhotoUploadViewModel
+
+@{
+    ViewBag.Title = "Upload";
+}
+
+<h2>Upload</h2>
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken();
+    
+    <div class="editor-label">
+        @Html.LabelFor(model => model.AlbumId)
+    </div>
+    <div class="editor-field input-control select size5">
+        @Html.DropDownListFor(model => model.AlbumId, Model.AlbumSelection)
+        <span class="fg-red">@Html.ValidationMessageFor(model => model.AlbumId)</span>
+    </div>
+    
+    <div class="editor-label">
+        @Html.LabelFor(model => model.ImageData)
+    </div>
+    <div class="editor-field input-control file size5">
+        @Html.TextBoxFor(x => x.ImageData, new { type = "file" })
+        @Html.ValidationMessageFor(x => x.ImageData)
+        <button class="btn-file"></button>
+    </div>
+    
+    Html.RenderPartial("_PrivacyFormPartial", Model.Privacy);
+    
+    <div>
+        <button type="Upload">Upload</button>
+    </div>
+}
+
+@section Scripts
+{
+    @Html.Partial("_PrivacyFormJs");
+}
